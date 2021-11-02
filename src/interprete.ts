@@ -5,10 +5,10 @@ type Expression={
     value:Expression
 }|{
     read:any
-}|string|number|{var:string}
+}|string|number|{var:string}|Expression[]
 
 
-export function evaluate(program:Expression[],input:any[]):string{
+export function evaluate(program:Expression,input:any[]):string{
     let output="";
     const variables={}
 
@@ -36,11 +36,15 @@ export function evaluate(program:Expression[],input:any[]):string{
                 return variables[expr.var]
             }
         }
+        if(expr instanceof Array){
+            let lastRet=null;
+            for(let elem of expr){
+                lastRet=realEvaluate(elem);
+            }
+            return lastRet
+        }
         return expr
     }
-
-    for(let expr of program){
-        realEvaluate(expr);
-    }
+    realEvaluate(program)
     return output;
 }
