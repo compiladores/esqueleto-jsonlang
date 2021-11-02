@@ -37,11 +37,13 @@ export function evaluate(program:Expression,input:any[]):string{
             }
         }
         if(expr instanceof Array){
-            let lastRet=null;
-            for(let elem of expr){
-                lastRet=realEvaluate(elem);
+            if(expr.length===1){
+                return realEvaluate(expr[0])
+            }else{
+                const [head,...tail] = expr;
+                realEvaluate(head);
+                return realEvaluate(tail);
             }
-            return lastRet
         }
         return expr
     }
